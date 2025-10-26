@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ae player | Universal Video Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><radialGradient id='a' cx='50%' cy='50%' r='50%'><stop offset='0%' stop-color='%236b46c1'/><stop offset='50%' stop-color='%234c2c92'/><stop offset='100%' stop-color='%232a105a'/></radialGradient><filter id='shadow' x='-20%' y='-20%' width='140%' height='140%'><feGaussianBlur in='SourceAlpha' stdDeviation='1'/><feOffset dx='1' dy='1' result='offsetblur'/><feFlood flood-color='%23000000' flood-opacity='0.3'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><circle cx='50' cy='50' r='48' fill='url(%23a)' stroke='%23ffffff' stroke-width='2'/><text x='50' y='64' font-family='Inter, sans-serif' font-size='50' font-weight='900' fill='%23ffffff' text-anchor='middle' letter-spacing='-0.08em' filter='url(%23shadow)'>AE</text></svg>" type="image/svg+xml">
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="bg-layer-1"></div>
+        <div class="bg-layer-2"></div>
+        <div class="floating-particles" id="floatingParticles"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="fade-in">
+            <div class="logo">
+                <i class="fas fa-play-circle logo-icon"></i>
+                <div>
+                    <h1>ae player</h1>
+                    <p class="subtitle">Universal Video Platform</p>
+                </div>
+            </div>
+            <div class="platform-tabs">
+                <div class="platform-tab all active" data-platform="all">
+                    <i class="fas fa-globe-americas"></i> All Videos
+                </div>
+                <div class="platform-tab youtube" data-platform="youtube">
+                    <i class="fab fa-youtube"></i> YouTube
+                </div>
+                <div class="platform-tab drive" data-platform="drive">
+                    <i class="fab fa-google-drive"></i> Google Drive
+                </div>
+                <div class="platform-tab vimeo" data-platform="vimeo">
+                    <i class="fab fa-vimeo"></i> Vimeo
+                </div>
+                <div class="platform-tab dailymotion" data-platform="dailymotion">
+                    <i class="fab fa-dailymotion"></i> Dailymotion
+                </div>
+                <div class="platform-tab facebook" data-platform="facebook">
+                    <i class="fab fa-facebook"></i> Facebook
+                </div>
+                <div class="platform-tab instagram" data-platform="instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </div>
+                <div class="platform-tab tiktok" data-platform="tiktok">
+                    <i class="fab fa-tiktok"></i> TikTok
+                </div>
+                <div class="platform-tab twitter" data-platform="twitter">
+                    <i class="fab fa-twitter"></i> Twitter/X
+                </div>
+                <div class="platform-tab twitch" data-platform="twitch">
+                    <i class="fab fa-twitch"></i> Twitch
+                </div>
+                <div class="platform-tab other" data-platform="other">
+                    <i class="fas fa-film"></i> Other Videos
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="player-section slide-in-left">
+                <div class="video-container">
+                    <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+                    <div class="fallback-message" id="fallbackMessage">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Preview Not Available</h3>
+                        <p>This video cannot be previewed directly. Try one of these options:</p>
+                        <div class="fallback-options">
+                            <button class="fallback-btn" id="openOriginal"><i class="fas fa-external-link-alt"></i> Open
+                                Original</button>
+                            <button class="fallback-btn" id="downloadVideo"><i class="fas fa-download"></i>
+                                Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-info">
+                    <div class="video-title">
+                        <span id="currentVideoTitle">Select a video to play</span>
+                        <span class="platform-badge" id="currentPlatformBadge"></span>
+                    </div>
+                    <div class="video-description" id="currentVideoDescription">Choose a video from the playlist or add
+                        your own URL to get started with the ultimate video experience.</div>
+                </div>
+
+                <div class="controls">
+                    <button id="prevBtn" disabled><i class="fas fa-step-backward"></i> Previous</button>
+                    <button id="nextBtn">Next <i class="fas fa-step-forward"></i></button>
+                </div>
+
+                <div class="custom-url-section">
+                    <h4><i class="fas fa-plus-circle"></i> Add Custom Video URL</h4>
+                    <div class="url-input-group">
+                        <input type="text" id="customVideoUrl"
+                            placeholder="Paste any video URL (YouTube, Drive, MP4, Vimeo, etc.)">
+                        <button id="addCustomVideo"><i class="fas fa-plus"></i> Add Video</button>
+                    </div>
+                    <div class="supported-platforms">
+                        <span>Supported platforms:</span>
+                        <span class="platform-tag">YouTube</span>
+                        <span class="platform-tag">Google Drive</span>
+                        <span class="platform-tag">Vimeo</span>
+                        <span class="platform-tag">Dailymotion</span>
+                        <span class="platform-tag">Facebook</span>
+                        <span class="platform-tag">Instagram</span>
+                        <span class="platform-tag">TikTok</span>
+                        <span class="platform-tag">Twitter/X</span>
+                        <span class="platform-tag">Twitch</span>
+                        <span class="platform-tag">Streamable</span>
+                        <span class="platform-tag">Dropbox</span>
+                        <span class="platform-tag">Google Photos</span>
+                        <span class="platform-tag">MP4/WebM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="playlist-section fade-in">
+                <div class="playlist-header">
+                    <h3 class="playlist-title"><i class="fas fa-list-ol"></i> Video Library</h3>
+                    <div class="video-count" id="videoCount">0 videos</div>
+                </div>
+
+                <!-- Professional Search and Sort System -->
+                <div class="search-sort-container">
+                    <div class="search-box">
+                        <div class="search-input-wrapper">
+                            <input type="text" id="videoSearch" class="search-input" placeholder="Search videos...">
+                            <i class="fas fa-search search-icon"></i>
+                            <div class="search-actions">
+                                <div class="search-loading" id="searchLoading">
+                                    <div class="spinner"></div>
+                                </div>
+                                <button class="clear-search-btn" id="clearSearchBtn" title="Clear search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="search-suggestions" id="searchSuggestions"></div>
+
+                        <div class="search-results-info" id="searchResultsInfo">
+                            <div class="search-stats">
+                                <span id="resultsCount">0 results</span>
+                                <span class="search-time" id="searchTime"></span>
+                            </div>
+                            <button class="clear-filters" id="clearAllFilters">
+                                <i class="fas fa-times"></i> Clear all
+                            </button>
+                        </div>
+
+                        <div class="active-filters" id="activeFilters"></div>
+                    </div>
+
+                    <div class="sort-filter-container">
+                        <div class="sort-dropdown">
+                            <select id="sortOptions" class="sort-select">
+                                <option value="default">Sort: Default</option>
+                                <option value="title_asc">Sort: Title A-Z</option>
+                                <option value="title_desc">Sort: Title Z-A</option>
+                                <option value="date_desc">Sort: Newest First</option>
+                                <option value="date_asc">Sort: Oldest First</option>
+                                <option value="duration_asc">Sort: Duration Shortest</option>
+                                <option value="duration_desc">Sort: Duration Longest</option>
+                                <option value="popularity">Sort: Most Popular</option>
+                                <option value="recently_played">Sort: Recently Played</option>
+                            </select>
+                        </div>
+                        <div class="filter-dropdown">
+                            <select id="filterOptions" class="filter-select">
+                                <option value="all">Filter: All</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="drive">Google Drive</option>
+                                <option value="vimeo">Vimeo</option>
+                                <option value="dailymotion">Dailymotion</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="twitter">Twitter/X</option>
+                                <option value="twitch">Twitch</option>
+                                <option value="streamable">Streamable</option>
+                                <option value="dropbox">Dropbox</option>
+                                <option value="photos">Google Photos</option>
+                                <option value="direct">Direct Video</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="advanced-search-panel" id="advancedSearchPanel">
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <label class="filter-label">Search Fields</label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="searchTitle" checked> Title
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="searchDescription"> Description
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="searchPlatform"> Platform
+                            </label>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Duration</label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filterShort"> Short (< 5 min) </label>
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" id="filterMedium"> Medium (5-15 min)
+                                    </label>
+                                    <label class="filter-checkbox">
+                                        <input type="checkbox" id="filterLong"> Long (> 15 min)
+                                    </label>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filterRecent" checked> Recently Added
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filterPopular"> Popular
+                            </label>
+                            <label class="filter-checkbox">
+                                <input type="checkbox" id="filterWatched"> Watched
+                            </label>
+                        </div>
+                    </div>
+                    <button class="clear-filters" id="applyAdvancedFilters">
+                        <i class="fas fa-filter"></i> Apply Filters
+                    </button>
+                </div>
+
+                <div class="video-list" id="videoList">
+                    <div class="empty-state">
+                        <i class="fas fa-video"></i>
+                        <h3>No Videos Available</h3>
+                        <p> Loading videos from cloud storage...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>aeris | ae player &copy; 2025 | Universal Video Platform</p>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Operation completed successfully</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
