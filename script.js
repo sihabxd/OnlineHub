@@ -6,7 +6,7 @@ const CONFIG = {
         API_URL: 'https://api.airtable.com/v0'
     },
     SEARCH: {
-        DEBOUNCE_DELAY: 250,
+        DEBOUNCE_DELAY: 100,
         MIN_SEARCH_LENGTH: 2,
         MAX_SUGGESTIONS: 10,
         SEARCH_FIELDS: ['title', 'description', 'type', 'tags', 'category', 'author'],

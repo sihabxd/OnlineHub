@@ -23,6 +23,7 @@
     </div>
 
     <div class="container">
+        <!-- LOGO -->
         <header class="fade-in">
             <div class="logo">
                 <i class="fas fa-play-circle logo-icon"></i>
@@ -31,6 +32,8 @@
                     <p class="subtitle">Universal Video Platform</p>
                 </div>
             </div>
+
+            <!-- PLATFORM TABS -->
             <div class="platform-tabs">
                 <div class="platform-tab all active" data-platform="all">
                     <i class="fas fa-globe-americas"></i> All Videos
@@ -69,7 +72,9 @@
         </header>
 
         <div class="main-content">
+            <!-- PLAYER + CONTROLS + URLS -->
             <div class="player-section slide-in-left">
+                <!-- PLAYER -->
                 <div class="video-container">
                     <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
                     <div class="fallback-message" id="fallbackMessage">
@@ -93,11 +98,13 @@
                         your own URL to get started with the ultimate video experience.</div>
                 </div>
 
+                <!-- CONTROLS -->
                 <div class="controls">
                     <button id="prevBtn" disabled><i class="fas fa-step-backward"></i> Previous</button>
                     <button id="nextBtn">Next <i class="fas fa-step-forward"></i></button>
                 </div>
 
+                <!-- URLS -->
                 <div class="custom-url-section">
                     <h4><i class="fas fa-plus-circle"></i> Add Custom Video URL</h4>
                     <div class="url-input-group">
@@ -124,13 +131,13 @@
                 </div>
             </div>
 
+            <!-- PLAYLIST LIBRARY -->
             <div class="playlist-section fade-in">
                 <div class="playlist-header">
                     <h3 class="playlist-title"><i class="fas fa-list-ol"></i> Video Library</h3>
                     <div class="video-count" id="videoCount">0 videos</div>
                 </div>
 
-                <!-- Professional Search and Sort System -->
                 <div class="search-sort-container">
                     <div class="search-box">
                         <div class="search-input-wrapper">
@@ -249,7 +256,8 @@
             </div>
         </div>
 
-       <footer>
+        <!-- FOOTER -->
+        <footer>
             <p><a href="https://sites.google.com/view/aeris60" target="_blank" title="Visit AERIS Official Site" style="text-decoration:none;color:inherit;">AERIS</a> | OnlineHub &copy; 2025 | Universal Video Platform</p>
         </footer>
     </div>
@@ -259,9 +267,6 @@
         <span id="notificationText">Operation completed successfully</span>
     </div>
 
-    <!-- Font Awesome Library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="script.js"></script>
 </body>
 </html>
