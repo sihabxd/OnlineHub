@@ -1,4 +1,4 @@
-// ==================== ENHANCED PROFESSIONAL CONFIGURATION ====================
+//==================== ENHANCED PROFESSIONAL CONFIGURATION ====================
 const CONFIG = {
     AIRTABLE: {
         BASE_ID: 'appFZTp4rpbWSdLVO',
@@ -13,14 +13,6 @@ const CONFIG = {
         CACHE_DURATION: 10 * 60 * 1000,
         FUZZY_SEARCH: true,
         ENABLE_SUGGESTIONS: true
-    },
-    STORAGE: {
-        ALL_VIDEOS_KEY: 'enhancedVideoPlayer_allVideos',
-        CURRENT_VIDEO_KEY: 'enhancedVideoPlayer_currentVideo',
-        FILTER_STATE_KEY: 'enhancedVideoPlayer_filterState',
-        RECENTLY_PLAYED_KEY: 'enhancedVideoPlayer_recentlyPlayed',
-        VIDEO_STATS_KEY: 'enhancedVideoPlayer_videoStats',
-        SEARCH_HISTORY_KEY: 'enhancedVideoPlayer_searchHistory'
     },
     PERFORMANCE: {
         LAZY_LOAD_THRESHOLD: 100,
@@ -389,7 +381,6 @@ class VideoAnalytics {
     constructor() {
         this.stats = new Map();
         this.sessionStart = Date.now();
-        this.loadStats();
     }
 
     trackVideoEvent(event, video, metadata = {}) {
@@ -451,28 +442,6 @@ class VideoAnalytics {
 
     saveVideoStats(videoId, stats) {
         this.stats.set(videoId, stats);
-        this.persistStats();
-    }
-
-    loadStats() {
-        try {
-            const saved = localStorage.getItem(CONFIG.STORAGE.VIDEO_STATS_KEY);
-            if (saved) {
-                const data = JSON.parse(saved);
-                this.stats = new Map(Object.entries(data));
-            }
-        } catch (error) {
-            console.warn('Failed to load video stats:', error);
-        }
-    }
-
-    persistStats() {
-        try {
-            const data = Object.fromEntries(this.stats);
-            localStorage.setItem(CONFIG.STORAGE.VIDEO_STATS_KEY, JSON.stringify(data));
-        } catch (error) {
-            console.warn('Failed to save video stats:', error);
-        }
     }
 
     getPopularVideos(videos, limit = 10) {
@@ -1083,27 +1052,10 @@ class EnhancedVideoManager {
         this.showNotification('Loading videos...', 'info');
         
         try {
-            // Try to load from cache first
-            const cached = this.loadFromStorage(CONFIG.STORAGE.ALL_VIDEOS_KEY);
-            if (cached && cached.length > 0) {
-                this.allVideos = cached;
-                console.log(`Loaded ${this.allVideos.length} videos from cache`);
-            }
-
-            // Always refresh from Airtable for latest data
-            try {
-                const freshVideos = await this.services.airtable.getAllVideos();
-                if (freshVideos.length > 0) {
-                    this.allVideos = freshVideos;
-                    this.saveToStorage(CONFIG.STORAGE.ALL_VIDEOS_KEY, this.allVideos);
-                    console.log(`Synced ${freshVideos.length} videos from cloud`);
-                }
-            } catch (airtableError) {
-                console.warn('Airtable sync failed, using cached data:', airtableError);
-                if (this.allVideos.length === 0) {
-                    throw new Error('No videos available - offline mode with no cached data');
-                }
-            }
+            // Always load from Airtable
+            const freshVideos = await this.services.airtable.getAllVideos();
+            this.allVideos = freshVideos;
+            console.log(`Loaded ${this.allVideos.length} videos from Airtable`);
             
             await this.searchService.buildSearchIndex(this.allVideos);
             this.restoreApplicationState();
@@ -1213,7 +1165,6 @@ class EnhancedVideoManager {
         const videoIndex = this.filteredVideos.findIndex(v => v.id === videoId);
         if (videoIndex !== -1) {
             this.currentVideoId = videoId;
-            this.saveToStorage(CONFIG.STORAGE.CURRENT_VIDEO_KEY, videoId);
             this.addToRecentlyPlayed(videoId);
             this.updateUI();
             return this.filteredVideos[videoIndex];
@@ -1261,7 +1212,6 @@ class EnhancedVideoManager {
         });
         
         this.recentlyPlayed = this.recentlyPlayed.slice(0, 50);
-        this.saveToStorage(CONFIG.STORAGE.RECENTLY_PLAYED_KEY, this.recentlyPlayed);
     }
 
     addToSearchHistory(searchTerm) {
@@ -1274,7 +1224,6 @@ class EnhancedVideoManager {
         
         this.searchHistory.unshift(searchTerm);
         this.searchHistory = this.searchHistory.slice(0, 10);
-        this.saveToStorage(CONFIG.STORAGE.SEARCH_HISTORY_KEY, this.searchHistory);
     }
 
     getRecentlyPlayedData(videoId) {
@@ -1291,62 +1240,8 @@ class EnhancedVideoManager {
         return viewCount + (playCount * 10) + (analyticsScore * 0.5);
     }
 
-    saveToStorage(key, data) {
-        try {
-            localStorage.setItem(key, JSON.stringify(data));
-        } catch (error) {
-            console.error('Error saving to storage:', error);
-            // Clear cache if storage is full
-            if (error.name === 'QuotaExceededError') {
-                this.clearStorageCache();
-            }
-        }
-    }
-
-    loadFromStorage(key) {
-        try {
-            const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
-        } catch (error) {
-            console.error('Error loading from storage:', error);
-            return null;
-        }
-    }
-
-    clearStorageCache() {
-        Object.values(CONFIG.STORAGE).forEach(key => {
-            if (key !== CONFIG.STORAGE.VIDEO_STATS_KEY) {
-                localStorage.removeItem(key);
-            }
-        });
-        this.showNotification('Storage cleared to free up space', 'warning');
-    }
-
     restoreApplicationState() {
-        const savedVideoId = this.loadFromStorage(CONFIG.STORAGE.CURRENT_VIDEO_KEY);
-        if (savedVideoId && this.allVideos.some(v => v.id === savedVideoId)) {
-            this.currentVideoId = savedVideoId;
-        }
-
-        this.recentlyPlayed = this.loadFromStorage(CONFIG.STORAGE.RECENTLY_PLAYED_KEY) || [];
-        this.searchHistory = this.loadFromStorage(CONFIG.STORAGE.SEARCH_HISTORY_KEY) || [];
-
-        const savedState = this.loadFromStorage(CONFIG.STORAGE.FILTER_STATE_KEY);
-        if (savedState) {
-            this.currentPlatform = savedState.platform || 'all';
-            this.currentSearchTerm = savedState.searchTerm || '';
-            this.currentSortOption = savedState.sortOption || 'default';
-            this.currentFilters.platform = this.currentPlatform;
-        }
-    }
-
-    saveFilterState() {
-        const state = {
-            platform: this.currentPlatform,
-            searchTerm: this.currentSearchTerm,
-            sortOption: this.currentSortOption
-        };
-        this.saveToStorage(CONFIG.STORAGE.FILTER_STATE_KEY, state);
+        // No localStorage restoration needed - all state is managed in memory
     }
 
     updateUI() {
@@ -1354,7 +1249,6 @@ class EnhancedVideoManager {
         this.renderPlaylist();
         this.updateNavigationButtons();
         this.updateActiveVideoHighlight();
-        this.saveFilterState();
     }
 
     updateVideoCount() {
@@ -1582,7 +1476,6 @@ class EnhancedVideoManager {
             // Update local state
             this.allVideos.push(createdVideo);
             await this.searchService.buildSearchIndex(this.allVideos);
-            this.saveToStorage(CONFIG.STORAGE.ALL_VIDEOS_KEY, this.allVideos);
             
             // Refresh view
             this.applyFiltersAndSearch();
